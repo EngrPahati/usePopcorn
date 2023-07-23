@@ -53,27 +53,33 @@ const average = (arr) =>
 const KEY = '5c97f505'
 
 export default function App() {
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('');
-  const query = "inasbdjisa"; 
-  
-  //  useEffect using promise based function
+  const tempQuery = "interstellar"; 
+
   // useEffect(function () {
-  //   fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
-  //   .then(res => res.json())
-  //   .then(data => setMovies(data.Search))
+  //   console.log('After initial render');
   // }, []);
 
-  // useEffect using async await function
-    
+  // useEffect(function () {
+  //   console.log('After every render');
+  // },);
+
+  // useEffect(function () {
+  //   console.log("D")
+  // });
+  
+  // console.log('During render');
+
   useEffect(function () {
     async function fetchMovies() {
       try {
         setIsLoading(true);
+        setError('');
         const res = await fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=${query}`);
-        // console.log(res.ok, 'this is from res');
       
         if (!res.ok) throw new Error
           ("Something went wrong with fetching movies ");
@@ -83,22 +89,26 @@ export default function App() {
           ("Movie not found")
 
         setMovies(data.Search);
-        console.log(data);
       } catch (err) {
         console.error(err.message);
         setError(err.message);
       } finally {
         setIsLoading(false)
       }
-
     }
+    if (query.length < 3) {
+      setMovies([]);
+      setError("");
+      return;
+    }
+
     fetchMovies();
-  }, []);
+  }, [query]);
 
   return (
     <>
       <NavBar movies={movies}>
-        <Search />
+        <Search query={query} setQuery={setQuery}/>
         <NumResults movies={movies}/>
       </NavBar>
       <Main>
@@ -151,8 +161,7 @@ function Logo() {
   );
 }
 
-function Search() {
-  const [query, setQuery] = useState("");
+function Search({query, setQuery}) {
 
   return (
     <input
