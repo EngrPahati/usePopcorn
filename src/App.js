@@ -169,8 +169,19 @@ function Search({ query, setQuery }) {
   const inputEl = useRef(null);
 
   useEffect(function () {
+    function callback(e) {
+    //checking if the input element is already active
+      if (document.activeElement === inputEl.current) return;
 
-    inputEl.current.focus();
+      if (e.code === 'Enter' || e.code === 'NumpadEnter') {
+        inputEl.current.focus();   
+        setQuery("");
+      }
+    }
+    document.addEventListener("keydown", callback);
+
+    return () => document.addEventListener("keydown", callback);
+
   }, [])
   // useEffect(function () {
   //   const el = document.querySelector('.search');
