@@ -118,9 +118,9 @@ export default function App() {
         setError("");
 
       } catch (err) {
-        console.error(err.message);
 
         if (err.name !== "AbortError") {
+          console.log(err.message);
           setError(err.message);          
         }
 
@@ -134,6 +134,7 @@ export default function App() {
       return;
     }
 
+    handleCloseMovie();
     fetchMovies();
 
     return function () {
@@ -349,7 +350,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     function callback (e) {
       if (e.code === 'Escape') {
         onCloseMovie();
-        console.log('CLOSING');
       }
     }
 
@@ -378,7 +378,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     
     return function () {
       document.title = "usePopcorn";
-      console.log(`Clean up effect for movie ${title}`)
+      console.log(`Clean up effect for movie ${title}`);
     };
   }, [title])
 
